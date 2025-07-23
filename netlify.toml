@@ -1,0 +1,15 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # This can sometimes help with module resolution issues in Node.js environments.
+  # It explicitly tells Node.js to enable experimental top-level await and ESM loader features.
+  # While not directly related to the "resolve import" error, it can affect the environment
+  # where Rollup/Vite runs and might resolve underlying compatibility.
+  NODE_OPTIONS = "--experimental-json-modules --experimental-specifier-resolution=node"
+  # You might also try:
+  # NODE_OPTIONS = "--max-old-space-size=4096" # If it's a memory issue, though logs don't suggest it.
+
+  # Explicitly set Node.js version if needed, though Netlify usually picks from package.json or defaults.
+  # NODE_VERSION = "18" # Or "20", whatever is stable and compatible.
