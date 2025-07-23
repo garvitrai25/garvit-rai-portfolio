@@ -6,8 +6,8 @@ export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
     exclude: ['lucide-react'],
-    // Keep these includes for development server performance,
-    // but the build issue will be addressed by the new 'resolve.alias' or 'build.commonjsOptions'
+    // Keep these includes for development server performance.
+    // They are less impactful for production build issues but don't hurt.
     include: [
       'firebase/app',
       'firebase/firestore',
@@ -15,27 +15,31 @@ export default defineConfig({
     ],
   },
   build: {
+    // Remove previous rollupOptions and commonjsOptions that were causing conflicts or not resolving the issue.
+    // Instead, we'll focus on a more direct bundling approach.
     rollupOptions: {
-      // This approach is often more reliable for Firebase in production with Vite.
-      // It explicitly tells Rollup how to handle these specific Firebase sub-paths.
-      // We'll try to ensure they are treated as CJS or correctly resolved.
       output: {
-        manualChunks: {
-          'firebase-app': ['firebase/app'],
-          'firebase-firestore': ['firebase/firestore/lite'], // Use /lite here too
-          // Add other firebase modules if you use them, e.g., 'firebase-analytics': ['firebase/analytics'],
+        // Ensure that Firebase modules are not externalized and are bundled directly.
+        // This is often the most reliable way to prevent "Failed to resolve module specifier" errors
+        // for client-side libraries like Firebase in production builds.
+        manualChunks: (id) => {
+          if (id.includes('firebase')) {
+            // Group all firebase modules into a single 'firebase' chunk
+            return 'firebase';
+          }
+          // Default chunking for other modules
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
         },
       },
     },
-    // This is another common fix for Firebase v9+ in Vite production builds.
-    // It tells Vite to transform these CommonJS modules into ESM during the build.
+    // Ensure that CommonJS modules are correctly transformed to ESM.
+    // This is crucial for Firebase v9+ in Vite production builds.
     commonjsOptions: {
       include: [/node_modules/],
-      // Explicitly list Firebase modules that might be causing issues
-      // This helps Vite/Rollup process them correctly for the browser
-      esmExternals: ['firebase/app', 'firebase/firestore', 'firebase/analytics'],
-      // You might need to adjust this based on the exact structure of Firebase's internal modules
-      // Sometimes just including the top-level package is enough.
+      // Explicitly transpile Firebase modules if they are CommonJS
+      transformMixedEsModules: true, // Important for mixed CJS/ESM packages
     },
   },
 });
