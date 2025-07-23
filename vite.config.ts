@@ -1,12 +1,14 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import path from 'path'; // Import 'path' module
+// Remove 'path' import as it's no longer needed without 'resolve.alias'
+// import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
     exclude: ['lucide-react'],
+    // Keep these includes for development server performance.
     include: [
       'firebase/app',
       'firebase/firestore',
@@ -25,29 +27,21 @@ export default defineConfig({
           }
         },
       },
-      // Add a custom resolver to explicitly tell Rollup how to find Firebase modules
-      // This is a more aggressive attempt to resolve the 'firebase/app' import issue.
-      // It tries to force Rollup to use Node.js module resolution for Firebase.
-      input: {
-        main: path.resolve(__dirname, 'index.html'), // Ensure main entry point is correctly defined
-      },
+      // Remove 'input' if it was added solely for the alias, otherwise keep your main entry point
+      // input: {
+      //   main: path.resolve(__dirname, 'index.html'),
+      // },
     },
     commonjsOptions: {
       include: [/node_modules/],
       transformMixedEsModules: true, // Important for mixed CJS/ESM packages
     },
   },
-  resolve: {
-    // This alias can sometimes help with module resolution issues,
-    // ensuring that 'firebase/app' correctly points to the installed package.
-    alias: {
-      'firebase/app': path.resolve(__dirname, 'node_modules/firebase/app/dist/index.esm.js'),
-      'firebase/firestore': path.resolve(__dirname, 'node_modules/firebase/firestore/dist/index.esm.js'),
-      // If you use firebase/firestore/lite, you might need to add it here too:
-      // 'firebase/firestore/lite': path.resolve(__dirname, 'node_modules/firebase/firestore/dist/index.esm.js'),
-      // Note: The actual path might vary slightly based on Firebase version and internal structure.
-      // You might need to check your node_modules/firebase/app/dist and node_modules/firebase/firestore/dist
-      // for the exact ESM entry point (e.g., index.esm.js, index.mjs, etc.)
-    },
-  },
+  // IMPORTANT: Remove the entire 'resolve' object with the 'alias' for Firebase.
+  // resolve: {
+  //   alias: {
+  //     'firebase/app': path.resolve(__dirname, 'node_modules/firebase/app/dist/index.esm.js'),
+  //     'firebase/firestore': path.resolve(__dirname, 'node_modules/firebase/firestore/dist/index.esm.js'),
+  //   },
+  // },
 });
