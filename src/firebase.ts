@@ -1,9 +1,16 @@
 // src/firebase.ts
 
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// import { getAnalytics } from "firebase/analytics"; // Analytics is optional for the contact form functionality
-import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore"; // Import Firestore specific functions
+// Change these imports to use the 'firebase/compat' or full path if issues persist,
+// but the direct 'firebase/app' and 'firebase/firestore' should work with proper Vite config.
+// The key is sometimes how the bundler resolves the 'package.json' 'exports' field.
+
+// Let's try explicit imports that are often more robust with bundlers
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore/lite'; // <-- IMPORTANT: Added '/lite' for smaller bundle and sometimes better compatibility
+// If you are using getAnalytics, uncomment and ensure it's from '/analytics/lite' or just '/analytics'
+// import { getAnalytics } from "firebase/analytics";
+
 
 // Your web app's Firebase configuration (PASTED FROM YOUR CONSOLE)
 const firebaseConfig = {
@@ -18,7 +25,8 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app); // Keep this line if you want to use Analytics, otherwise it can be removed
+// If you are using getAnalytics, uncomment this:
+// const analytics = getAnalytics(app);
 
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
