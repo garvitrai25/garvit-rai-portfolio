@@ -1,13 +1,12 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import path from 'path'; // Import 'path' module
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
     exclude: ['lucide-react'],
-    // Keep these includes for development server performance.
-    // They are less impactful for production build issues but don't hurt.
     include: [
       'firebase/app',
       'firebase/firestore',
@@ -15,31 +14,40 @@ export default defineConfig({
     ],
   },
   build: {
-    // Remove previous rollupOptions and commonjsOptions that were causing conflicts or not resolving the issue.
-    // Instead, we'll focus on a more direct bundling approach.
     rollupOptions: {
       output: {
-        // Ensure that Firebase modules are not externalized and are bundled directly.
-        // This is often the most reliable way to prevent "Failed to resolve module specifier" errors
-        // for client-side libraries like Firebase in production builds.
         manualChunks: (id) => {
           if (id.includes('firebase')) {
-            // Group all firebase modules into a single 'firebase' chunk
-            return 'firebase';
+            return 'firebase'; // Group all firebase modules into a single 'firebase' chunk
           }
-          // Default chunking for other modules
           if (id.includes('node_modules')) {
-            return 'vendor';
+            return 'vendor'; // Default chunking for other modules
           }
         },
       },
+      // Add a custom resolver to explicitly tell Rollup how to find Firebase modules
+      // This is a more aggressive attempt to resolve the 'firebase/app' import issue.
+      // It tries to force Rollup to use Node.js module resolution for Firebase.
+      input: {
+        main: path.resolve(__dirname, 'index.html'), // Ensure main entry point is correctly defined
+      },
     },
-    // Ensure that CommonJS modules are correctly transformed to ESM.
-    // This is crucial for Firebase v9+ in Vite production builds.
     commonjsOptions: {
       include: [/node_modules/],
-      // Explicitly transpile Firebase modules if they are CommonJS
       transformMixedEsModules: true, // Important for mixed CJS/ESM packages
+    },
+  },
+  resolve: {
+    // This alias can sometimes help with module resolution issues,
+    // ensuring that 'firebase/app' correctly points to the installed package.
+    alias: {
+      'firebase/app': path.resolve(__dirname, 'node_modules/firebase/app/dist/index.esm.js'),
+      'firebase/firestore': path.resolve(__dirname, 'node_modules/firebase/firestore/dist/index.esm.js'),
+      // If you use firebase/firestore/lite, you might need to add it here too:
+      // 'firebase/firestore/lite': path.resolve(__dirname, 'node_modules/firebase/firestore/dist/index.esm.js'),
+      // Note: The actual path might vary slightly based on Firebase version and internal structure.
+      // You might need to check your node_modules/firebase/app/dist and node_modules/firebase/firestore/dist
+      // for the exact ESM entry point (e.g., index.esm.js, index.mjs, etc.)
     },
   },
 });
