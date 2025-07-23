@@ -1,14 +1,11 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-// Remove 'path' import as it's no longer needed without 'resolve.alias'
-// import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
     exclude: ['lucide-react'],
-    // Keep these includes for development server performance.
     include: [
       'firebase/app',
       'firebase/firestore',
@@ -26,22 +23,30 @@ export default defineConfig({
             return 'vendor'; // Default chunking for other modules
           }
         },
+        // This is a crucial part: explicitly tell Rollup how to resolve the Firebase imports
+        // when it creates the output bundles. This often fixes the "Failed to resolve import" error.
+        paths: {
+          'firebase/app': './node_modules/firebase/app/dist/index.esm.js', // Adjust if your local path is different
+          'firebase/firestore': './node_modules/firebase/firestore/dist/index.esm.js', // Adjust if your local path is different
+          // If using analytics, add:
+          // 'firebase/analytics': './node_modules/firebase/analytics/dist/index.esm.js',
+        },
       },
-      // Remove 'input' if it was added solely for the alias, otherwise keep your main entry point
-      // input: {
-      //   main: path.resolve(__dirname, 'index.html'),
-      // },
+      // Explicitly mark Firebase as external to prevent Rollup from trying to bundle it deeply,
+      // but then use 'paths' to tell it where to find the module at runtime.
+      external: [
+        'firebase/app',
+        'firebase/firestore',
+        'firebase/analytics', // Add if using analytics
+      ],
     },
     commonjsOptions: {
       include: [/node_modules/],
-      transformMixedEsModules: true, // Important for mixed CJS/ESM packages
+      transformMixedEsModules: true,
+      // Ensure 'firebase' is in esmExternals if it has mixed modules,
+      // but 'external' in rollupOptions might take precedence.
+      // We'll keep it here as a fallback.
+      esmExternals: ['firebase'],
     },
   },
-  // IMPORTANT: Remove the entire 'resolve' object with the 'alias' for Firebase.
-  // resolve: {
-  //   alias: {
-  //     'firebase/app': path.resolve(__dirname, 'node_modules/firebase/app/dist/index.esm.js'),
-  //     'firebase/firestore': path.resolve(__dirname, 'node_modules/firebase/firestore/dist/index.esm.js'),
-  //   },
-  // },
 });
