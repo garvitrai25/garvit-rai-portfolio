@@ -1,7 +1,18 @@
+// Portfolio app/src/components/Projects.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { FiExternalLink, FiGithub, FiPlayCircle } from 'react-icons/fi';
+
+// Import your project images from src/images folder
+import projectImage1 from '../images/chat.png'; // Assuming image1.jpg for Project 1
+import projectImage2 from '../images/ven.png'; // Assuming image2.jpg for Project 2
+import projectImage3 from '../images/blind.png'; // Assuming image3.jpg for Project 3
+import projectImage4 from '../images/farm.png'; // Assuming image4.jpg for Project 4
+import projectImage5 from '../images/tsd.png'; // Assuming image5.jpg for Project 5
+import projectImage6 from '../images/italian.png'; // Assuming image6.jpg for Project 6
+import projectImage7 from '../images/drum.png'; // Assuming image7.jpg for Project 7
+import projectImage8 from '../images/dice.png'; // Assuming image8.jpg for Project 8
 
 interface Project {
   id: number;
@@ -22,7 +33,7 @@ const projects: Project[] = [
     title: "AI-Powered Chatbot Assistant",
     description: "Intelligent chatbot for SAP systems with real-time data fetching.",
     longDescription: "Developed an intelligent, responsive chatbot using SAP AI Core (OpenAI GPT-4o) and Python Flask. Integrated with SAP systems for real-time data fetching (PO and Invoices via ZINV_STATUS_SRV OData service) and implemented multi-API support (OpenWeatherMap, timeapi.io) with intent recognition and stateful dialogue. Deployed on SAP Business Technology Platform (BTP) Cloud Foundry.",
-    image: "../images/chatbot.jpg", // Corrected image path
+    image: projectImage1, // Using imported image1
     technologies: ["SAP AI Core (GPT-4o)", "Python Flask", "SAP Gateway OData", "React", "TypeScript", "Tailwind CSS", "SAP BTP"],
     liveUrl: "https://flask-chatbot.cfapps.in30.hana.ondemand.com/",
     githubUrl: "https://github.com/garvitrai25",
@@ -34,7 +45,7 @@ const projects: Project[] = [
     title: "Vendor Onboarding Portal",
     description: "Full-stack system for supplier registration and approval with SAP integration.",
     longDescription: "Designed and developed a full-stack supplier registration and approval system. Features include multi-step vendor registration, a supplier management dashboard, and an approval workflow system. It utilizes real-time SAP OData integration with SUP_PRTL_VNB_ONBD_SRV service. Built with React, TypeScript, Vite, Tailwind CSS, and Python Flask, deployed on SAP BTP Cloud Foundry.",
-    image: "../images/vendor.jpg", // Corrected image path
+    image: projectImage2, // Using imported image2
     technologies: ["React", "TypeScript", "Vite", "Tailwind CSS", "Python Flask", "SAP BTP Cloud Foundry"],
     liveUrl: "https://vendor-onboarding-portal-proud-tiger-sz.cfapps.in30.hana.ondemand.com/",
     githubUrl: "https://github.com/garvitrai25",
@@ -46,10 +57,10 @@ const projects: Project[] = [
     title: "Smart Stick for Blind People",
     description: "AI-powered smart stick for visually impaired with object detection.",
     longDescription: "Developed a smart stick with a camera and object detection system for visually impaired individuals. Provides real-time detection of 5-8 common objects with audio feedback. Technologies: Python, OpenCV, TensorFlow, YOLO Object Detection Models. Features live camera feed processing, real-time audio alerts, and a portable design.",
-    image: "https://via.placeholder.com/800x450/667eea/ffffff?text=Smart+Stick+AI", // Placeholder image
+    image: projectImage3, // Using imported image3
     technologies: ["Python", "OpenCV", "TensorFlow", "YOLO"],
-    liveUrl: "#", // Replace with actual live demo URL if available
-    githubUrl: "https://github.com/garvitrai25", // Example GitHub link
+    liveUrl: "https://github.com/garvitrai25",
+    githubUrl: "https://github.com/garvitrai25",
     category: "AI/ML",
     featured: true
   },
@@ -58,10 +69,10 @@ const projects: Project[] = [
     title: "Farm Machinery Rental Platform",
     description: "Location-based web platform for farm machinery rental and sales.",
     longDescription: "Currently developing a location-based web platform for farm machinery rental and sales. Includes an equipment suggestion system based on farmers' requirements. This is a full-stack project in development.",
-    image: "https://via.placeholder.com/800x450/48bb78/ffffff?text=Farm+Platform", // Placeholder image
-    technologies: ["React", "Node.js", "MongoDB", "Express"], // Example technologies, adjust as per your actual tech stack for this project
-    liveUrl: "#", // Update when live
-    githubUrl: "https://github.com/garvitrai25", // Example GitHub link
+    image: projectImage4, // Using imported image4
+    technologies: ["React", "Node.js", "MongoDB", "Express"],
+    liveUrl: "https://github.com/garvitrai25",
+    githubUrl: "https://github.com/garvitrai25",
     category: "Full Stack Web App",
     featured: false
   },
@@ -70,10 +81,10 @@ const projects: Project[] = [
     title: "SAP S/4HANA Technical Documentation",
     description: "Formal Technical Specification Documents for custom Fiori applications.",
     longDescription: "Prepared formal Technical Specification Documents (TSDs) for custom Fiori applications focused on Procurement and Vendor Collaboration scope within SAP S/4HANA. Deliverables included 3 finalized TSDs with custom code snippets (JavaScript, XML), SAPUI5 logic, role checks, and business explanations.",
-    image: "https://via.placeholder.com/800x450/ed64a6/ffffff?text=SAP+Documentation", // Placeholder image
+    image: projectImage5, // Using imported image5
     technologies: ["SAPUI5", "JavaScript", "XML", "Technical Documentation"],
-    liveUrl: "#", // Not applicable for documentation, use "#" or remove
-    githubUrl: "https://github.com/garvitrai25/SAP-S4HANA-TSD", // Example GitHub link
+    liveUrl: "https://github.com/garvitrai25",
+    githubUrl: "https://github.com/garvitrai25/SAP-S4HANA-TSD",
     category: "Technical Documentation",
     featured: false
   },
@@ -82,10 +93,10 @@ const projects: Project[] = [
     title: "Italian Restaurant Website",
     description: "Elegantly designed website showcasing menu and ambiance.",
     longDescription: "An elegantly designed restaurant website showcasing its menu and ambiance. Developed using HTML and CSS, with a strong focus on visual appeal and a user-friendly interface.",
-    image: "https://via.placeholder.com/800x450/9f7aea/ffffff?text=Restaurant+Site", // Placeholder image
+    image: projectImage6, // Using imported image6
     technologies: ["HTML", "CSS"],
-    liveUrl: "#", // Replace with actual live demo URL if available
-    githubUrl: "https://github.com/garvitrai25", // Example GitHub link
+    liveUrl: "https://github.com/garvitrai25",
+    githubUrl: "https://github.com/garvitrai25",
     category: "Web Design",
     featured: false
   },
@@ -94,10 +105,10 @@ const projects: Project[] = [
     title: "Drum Kit Web Application",
     description: "Interactive drum kit with keyboard and click-based sound generation.",
     longDescription: "An interactive drum kit web application allowing sound generation via keyboard presses and mouse clicks. Built with HTML, CSS, and JavaScript, featuring event handling and responsive design.",
-    image: "https://via.placeholder.com/800x450/4fd1c5/ffffff?text=Drum+Kit+App", // Placeholder image
+    image: projectImage7, // Using imported image7
     technologies: ["HTML", "CSS", "JavaScript"],
-    liveUrl: "#", // Replace with actual live demo URL if available
-    githubUrl: "https://github.com/garvitrai25", // Example GitHub link
+    liveUrl: "https://github.com/garvitrai25",
+    githubUrl: "https://github.com/garvitrai25",
     category: "Web App",
     featured: false
   },
@@ -106,10 +117,10 @@ const projects: Project[] = [
     title: "Dice Challenge Game",
     description: "Simple web game with random dice rolls for two players.",
     longDescription: "A simple web-based game featuring random dice rolls for two players. Built using HTML, CSS, and JavaScript (utilizing querySelector for DOM manipulation). Includes features for random generation and winner determination.",
-    image: "https://via.placeholder.com/800x450/fc8181/ffffff?text=Dice+Game", // Placeholder image
+    image: projectImage8, // Using imported image8
     technologies: ["HTML", "CSS", "JavaScript"],
-    liveUrl: "#", // Replace with actual live demo URL if available
-    githubUrl: "https://github.com/garvitrai25", // Example GitHub link
+    liveUrl: "https://github.com/garvitrai25",
+    githubUrl: "https://github.com/garvitrai25",
     category: "Web Game",
     featured: false
   }

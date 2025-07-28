@@ -114,7 +114,7 @@ const Hero: React.FC = () => {
           
           <button className="group bg-dark-100/20 backdrop-blur-sm hover:bg-dark-100/30 text-white px-8 py-4 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 border border-dark-200/30 hover:border-primary-400/50 flex items-center space-x-2">
             <FiDownload className="w-5 h-5 group-hover:scale-110 transition-transform" />
-            <span>Download CV</span>
+            <span><a href="https://drive.google.com/file/d/18TdYfciZgCE6zhfiH5sjA9Rw05uDVLYl/view?usp=sharing" target="blank">Download CV</a></span>
           </button>
         </div>
       </div>

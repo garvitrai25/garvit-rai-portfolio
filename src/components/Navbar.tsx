@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react'; // Import useRef
 import { gsap } from 'gsap';
 import { FiHome, FiUser, FiBriefcase, FiCode, FiFolder, FiMessageSquare, FiMusic, FiMenu, FiX } from 'react-icons/fi';
 
@@ -6,6 +6,9 @@ const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+
+  // Create a ref for the audio element
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const navItems = [
     { name: 'Home', href: '#hero', icon: FiHome },
@@ -46,8 +49,19 @@ const Navbar: React.FC = () => {
   };
 
   const toggleMusic = () => {
-    setIsMusicPlaying(!isMusicPlaying);
-    // Music toggle logic would go here
+    if (audioRef.current) {
+      if (isMusicPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play().catch(error => {
+          // Autoplay policy might block playback without user interaction first.
+          // This catch handles that.
+          console.error("Autoplay failed:", error);
+          alert("Autoplay blocked. Please interact with the page first to play music.");
+        });
+      }
+      setIsMusicPlaying(!isMusicPlaying);
+    }
   };
 
   return (
@@ -61,7 +75,7 @@ const Navbar: React.FC = () => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <h1 className="text-2xl font-bold bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">
-              Garvit Rai's Portfolio {/* Updated to your name */}
+              Garvit Rai's Portfolio
             </h1>
           </div>
 
@@ -141,6 +155,13 @@ const Navbar: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Audio element for playback */}
+      <audio ref={audioRef} loop>
+        {/* Updated the src attribute with the correct path and filename */}
+        <source src="/audio/space-ambient-351305.mp3" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
     </nav>
   );
 };
